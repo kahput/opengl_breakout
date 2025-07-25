@@ -22,7 +22,7 @@ static Logger g_logger = { LOG_LEVEL_TRACE, false };
 static const char *g_level_strings[] = {
 	"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
 };
-static const char *g_level_colors[] = {
+static const char *g_log_level_colors[] = {
 	"\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m"
 };
 
@@ -50,9 +50,9 @@ void logger_log(LogLevel level, const char *file, int line, const char *format, 
 	va_list arg_ptr;
 	va_start(arg_ptr, format);
 	printf(
-		"%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ",
+		"%s %s%-5s\x1b[0m \x1b[37m%s:%d:\x1b[0m ",
 		time_buffer, // Timestamp
-		g_level_colors[level], // Start color for the level
+		g_log_level_colors[level], // Start color for the level
 		g_level_strings[level], // Log level string
 		file, // Source file name
 		line // Line number in source file

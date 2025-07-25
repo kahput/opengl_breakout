@@ -12,7 +12,7 @@ struct _arena {
 Arena* arena_alloc(void) {
 	Arena* arena = malloc(sizeof(Arena));
 	arena->offset = 0;
-	arena->capacity = (1 << 16);
+	arena->capacity = (1 << 24);
 	arena->data = malloc(arena->capacity);
 	return arena;
 }
