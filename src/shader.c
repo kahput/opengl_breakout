@@ -3,46 +3,12 @@
 #include "core/arena.h"
 #include "core/logger.h"
 
-#include <errno.h>
 #include <glad/gl.h>
-#include <stdio.h>
 #include <string.h>
 
 struct _gl_shader {
 	uint32_t program;
 };
-
-OpenGLShader *opengl_shader_create_file(Arena *arena, const char *vertex_shader_path, const char *fragment_shader_path) {
-	FILE *file = fopen(vertex_shader_path, "r");
-
-	if (fseek(file, 0, SEEK_END) == -1)
-		LOG_ERROR("FILE: %s", strerror(errno));
-	uint32_t offset = ftell(file);
-	rewind(file);
-
-	char vertex_shader_source[offset + 1];
-
-	fread(vertex_shader_source, 1, offset, file);
-	fclose(file);
-
-	vertex_shader_source[offset] = '\0';
-
-	file = fopen(fragment_shader_path, "r");
-
-	if (fseek(file, 0, SEEK_END) == -1)
-		LOG_ERROR("FILE: %s", strerror(errno));
-	offset = ftell(file);
-	rewind(file);
-
-	char fragment_shader_source[offset];
-
-	fread(fragment_shader_source, 1, offset, file);
-	fclose(file);
-
-	fragment_shader_source[offset] = '\0';
-
-	return opengl_shader_create(arena, vertex_shader_source, fragment_shader_source);
-}
 
 OpenGLShader *opengl_shader_create(Arena *arena, const char *vertex_shader_source, const char *fragment_shader_source) {
 	uint32_t vertex_shader = glCreateShader(GL_VERTEX_SHADER);

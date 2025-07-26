@@ -50,7 +50,7 @@ void ht_insert(HashTable *ht, const char *key, const void *value) {
 		return;
 	}
 
-	uint32_t str_length = strnlen(key, HT_MAX_KEY_SIZE - 1);
+	uint32_t str_length = strnlen(key, HT_MAX_KEY_SIZE);
 	if (str_length == HT_MAX_KEY_SIZE)
 		LOG_WARN("ht_insert(): Key missing null-terminator within HT_MAX_KEY_SIZE = %i", HT_MAX_KEY_SIZE);
 

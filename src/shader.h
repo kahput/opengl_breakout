@@ -5,7 +5,6 @@
 typedef struct _arena Arena;
 typedef struct _gl_shader OpenGLShader;
 
-OpenGLShader *opengl_shader_create_file(Arena *arena, const char *vertex_shader_path, const char *fragment_shader_path);
 OpenGLShader *opengl_shader_create(Arena *arena, const char *vertex_shader_source, const char *fragment_shader_source);
 
 void opengl_shader_activate(const OpenGLShader *shader);
