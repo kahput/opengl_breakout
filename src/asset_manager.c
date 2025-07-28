@@ -30,28 +30,28 @@ void asset_manager_shutdown() {
 }
 
 OpenGLShader *asset_manager_load_shader(const char *name, const char *vertex_shader_path, const char *fragment_shader_path) {
-	FILE *file = fopen(vertex_shader_path, "r");
+	FILE *file = fopen(vertex_shader_path, "rb");
 
 	if (fseek(file, 0, SEEK_END) == -1)
 		LOG_ERROR("FILE: %s", strerror(errno));
 	uint32_t offset = ftell(file);
 	rewind(file);
 
-	char vertex_shader_source[offset + 1];
+	char *vertex_shader_source = malloc(offset + 1);
 
 	fread(vertex_shader_source, 1, offset, file);
 	fclose(file);
 
 	vertex_shader_source[offset] = '\0';
 
-	file = fopen(fragment_shader_path, "r");
+	file = fopen(fragment_shader_path, "rb");
 
 	if (fseek(file, 0, SEEK_END) == -1)
 		LOG_ERROR("FILE: %s", strerror(errno));
 	offset = ftell(file);
 	rewind(file);
 
-	char fragment_shader_source[offset + 1];
+	char *fragment_shader_source = malloc(offset + 1);
 
 	fread(fragment_shader_source, 1, offset, file);
 	fclose(file);
@@ -59,6 +59,10 @@ OpenGLShader *asset_manager_load_shader(const char *name, const char *vertex_sha
 	fragment_shader_source[offset] = '\0';
 
 	OpenGLShader *new_shader = opengl_shader_create(g_asset_manager.asset_arena, vertex_shader_source, fragment_shader_source);
+	
+	free(vertex_shader_source);
+	free(fragment_shader_source);
+	
 	ht_insert(g_asset_manager.shaders, name, &new_shader);
 	return new_shader;
 }

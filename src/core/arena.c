@@ -29,10 +29,10 @@ void* arena_push(Arena* arena, size_t size) {
 	if (arena->offset + size >= arena->capacity) {
 		fprintf(stderr, "ARENA_OUT_OF_MEMORY\n");
 		exit(1);
-		return NULL;
+		// return NULL;
 	}
 
-	void* result = arena->data + arena->offset;
+	void* result = (uint8_t*)arena->data + arena->offset;
 	arena->offset += size;
 
 	return result;
@@ -42,10 +42,10 @@ void* arena_push_zero(Arena* arena, size_t size) {
 	if (arena->offset + size >= arena->capacity) {
 		fprintf(stderr, "ARENA_OUT_OF_MEMORY\n");
 		exit(1);
-		return NULL;
+		// return NULL;
 	}
 
-	void* result = arena->data + arena->offset;
+	void* result = (uint8_t*)arena->data + arena->offset;
 	memset(result, 0, size);
 	arena->offset += size;
 
