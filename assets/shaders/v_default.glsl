@@ -1,11 +1,13 @@
 #version 450 core
 
-layout(location = 0) in vec2 a_position;
-layout(location = 1) in vec2 a_texcoord;
+layout(location = 0) in vec4 vertex;
 
-out vec2 v_texcoord;
+out vec2 texture_coordinate;
+
+uniform mat4 u_model;
+uniform mat4 u_projection;
 
 void main() {
-    gl_Position = vec4(a_position, 0.0f, 1.0f);
-    v_texcoord = a_texcoord;
+    gl_Position = u_projection * u_model * vec4(vertex.xy, 0.0f, 1.0f);
+    texture_coordinate = vertex.zw;
 }
