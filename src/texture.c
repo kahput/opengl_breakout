@@ -45,5 +45,5 @@ void opengl_texture_activate(OpenGLTexture *texture, uint32_t texture_unit) {
 		exit(1);
 	}
 	OpenGLTexture *gl_texture = (OpenGLTexture *)texture;
-	glBindTextureUnit(texture_unit, texture->id);
+	glBindTextureUnit(texture_unit, gl_texture->id);
 }

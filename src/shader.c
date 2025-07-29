@@ -41,6 +41,7 @@ void opengl_shader_activate(const OpenGLShader *shader) {
 	glUseProgram(shader->program);
 }
 void opengl_shader_deactivate(const OpenGLShader *shader) {
+	(void)shader;
 	glUseProgram(0);
 }
 

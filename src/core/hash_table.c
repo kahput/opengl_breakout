@@ -50,7 +50,7 @@ void ht_insert(HashTable *ht, const char *key, const void *value) {
 		return;
 	}
 
-	uint32_t str_length = strnlen(key, HT_MAX_KEY_SIZE);
+	uint32_t str_length = (uint32_t)strnlen(key, HT_MAX_KEY_SIZE);
 	if (str_length == HT_MAX_KEY_SIZE)
 		LOG_WARN("ht_insert(): Key missing null-terminator within HT_MAX_KEY_SIZE = %i", HT_MAX_KEY_SIZE);
 
@@ -60,7 +60,7 @@ void ht_insert(HashTable *ht, const char *key, const void *value) {
 
 	int32_t index = 0;
 	char *items = ht->items;
-	for (int32_t i = 0; i < ht->capacity; i++) {
+	for (uint32_t i = 0; i < ht->capacity; i++) {
 		index = ht_get_hash(search_key, ht->capacity, i);
 		char *current_item = items + (ht->item_size * index);
 		if (current_item[0] == '\0' || memcmp(current_item, &HT_TOMBSTONE, sizeof(void *)) == 0) {

@@ -73,6 +73,8 @@ int main(void) {
 }
 
 void gl_message_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei size, GLchar const *message, void const *user_param) {
+	(void)user_param, (void)size;
+
 	char src_str[32];
 
 	switch (source) {
