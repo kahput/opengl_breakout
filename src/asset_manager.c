@@ -30,7 +30,7 @@ void asset_manager_shutdown() {
 }
 
 OpenGLShader *asset_manager_load_shader(const char *name, const char *vertex_shader_path, const char *fragment_shader_path) {
-	FILE *file = fopen(vertex_shader_path, "rb");
+	FILE *file = fopen(vertex_shader_path, "r");
 
 	if (fseek(file, 0, SEEK_END) == -1)
 		LOG_ERROR("FILE: %s", strerror(errno));
@@ -44,7 +44,7 @@ OpenGLShader *asset_manager_load_shader(const char *name, const char *vertex_sha
 
 	vertex_shader_source[offset] = '\0';
 
-	file = fopen(fragment_shader_path, "rb");
+	file = fopen(fragment_shader_path, "r");
 
 	if (fseek(file, 0, SEEK_END) == -1)
 		LOG_ERROR("FILE: %s", strerror(errno));
@@ -72,7 +72,6 @@ OpenGLShader *asset_manager_get_shader(const char *name) {
 }
 
 OpenGLTexture *asset_manager_load_texture(const char *name, const char *path) {
-	stbi_set_flip_vertically_on_load(true);
 
 	int32_t width, height, channel_count;
 	uint8_t *data = stbi_load(path, &width, &height, &channel_count, 0);

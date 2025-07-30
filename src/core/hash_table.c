@@ -6,6 +6,12 @@
 #include <math.h>
 #include <string.h>
 
+size_t strnlen(const char *s, size_t maxlen) {
+	size_t i;
+	for (i = 0; i < maxlen && s[i]; i++)
+		;
+	return i;
+}
 #define HT_PRIME_1 157
 #define HT_PRIME_2 151
 
@@ -81,7 +87,7 @@ void *ht_search(HashTable *ht, const char *key) {
 		LOG_ERROR("ht_search(): Invalid parameters");
 		return NULL;
 	}
-	uint32_t str_length = strnlen(key, HT_MAX_KEY_SIZE - 1);
+	uint32_t str_length = strnlen(key, HT_MAX_KEY_SIZE);
 	if (str_length == HT_MAX_KEY_SIZE)
 		LOG_WARN("ht_search(): Key missing null-terminator within HT_MAX_KEY_SIZE = %i", HT_MAX_KEY_SIZE);
 
@@ -91,7 +97,7 @@ void *ht_search(HashTable *ht, const char *key) {
 
 	int32_t index = 0;
 	char *items = ht->items;
-	for (int32_t i = 0; i < ht->capacity; i++) {
+	for (uint32_t i = 0; i < ht->capacity; i++) {
 		index = ht_get_hash(search_key, ht->capacity, i);
 		char *current_item = items + (ht->item_size * index);
 		if (memcmp(current_item, &HT_TOMBSTONE, sizeof(void *)) == 0)
@@ -110,8 +116,8 @@ void ht_remove(HashTable *ht, const char *key) {
 		LOG_ERROR("ht_remove(): Invalid parameters");
 		return;
 	}
-	uint32_t str_length = strnlen(key, HT_MAX_KEY_SIZE - 1);
-	if (str_length == HT_MAX_KEY_SIZE)
+	uint32_t str_length;
+	if ((str_length = strnlen(key, HT_MAX_KEY_SIZE)) == HT_MAX_KEY_SIZE)
 		LOG_WARN("ht_insert(): Key missing null-terminator within HT_MAX_KEY_SIZE = %i", HT_MAX_KEY_SIZE);
 
 	char search_key[HT_MAX_KEY_SIZE];
@@ -120,7 +126,7 @@ void ht_remove(HashTable *ht, const char *key) {
 
 	int32_t index = 0;
 	char *items = ht->items;
-	for (int32_t i = 0; i < ht->capacity; i++) {
+	for (uint32_t i = 0; i < ht->capacity; i++) {
 		index = ht_get_hash(search_key, ht->capacity, i);
 		char *current_item = items + (ht->item_size * index);
 		if (current_item[0] == '\0')

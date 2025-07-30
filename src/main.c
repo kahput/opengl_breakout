@@ -20,38 +20,26 @@
 
 const uint32_t SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480;
 
+typedef struct _display {
+	GLFWwindow *window;
+	uint32_t width, height;
+} Display;
+
+void initialize_display(Display *display);
 void gl_message_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, GLchar const *message, void const *user_param);
 
+
 int main(void) {
-	if (!glfwInit())
-		exit(EXIT_FAILURE);
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-	GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Breakout", NULL, NULL);
-	if (!window) {
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
-
-	glfwMakeContextCurrent(window);
-	gladLoadGL(glfwGetProcAddress);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_DEBUG_OUTPUT);
-
-	glDebugMessageCallback(gl_message_callback, NULL);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
-
+	Display display = {
+		.width = SCREEN_WIDTH,
+		.height = SCREEN_HEIGHT
+	};
+	initialize_display(&display);
 	Game *game = game_create(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(display.window)) {
 		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
+		glfwGetFramebufferSize(display.window, &width, &height);
 
 		game_process_input(game);
 		game_update(game);
@@ -62,11 +50,11 @@ int main(void) {
 
 		game_draw(game);
 
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(display.window);
 		glfwPollEvents();
 	}
 
-	glfwDestroyWindow(window);
+	glfwDestroyWindow(display.window);
 
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
@@ -144,4 +132,30 @@ void gl_message_callback(GLenum source, GLenum type, GLuint id, GLenum severity,
 			LOG_ERROR("%s, %s, %s, %d: %s\n", src_str, type_str, severity_str, id, message);
 		} break;
 	}
+}
+
+void initialize_display(Display *display) {
+	if (!glfwInit())
+		exit(EXIT_FAILURE);
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+	display->window = glfwCreateWindow(display->width, display->height, "Breakout", NULL, NULL);
+	if (!display->window) {
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+
+	glfwMakeContextCurrent(display->window);
+	gladLoadGL(glfwGetProcAddress);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEBUG_OUTPUT);
+
+	glDebugMessageCallback(gl_message_callback, NULL);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 }

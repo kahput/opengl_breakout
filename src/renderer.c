@@ -39,7 +39,7 @@ Renderer *renderer_create(Arena *arena, OpenGLShader *shader) {
 	// };
 	// clang-format on
 
-	uint32_t vbo, ibo;
+	uint32_t vbo;
 
 	glCreateBuffers(1, &vbo);
 	glNamedBufferStorage(vbo, sizeof(vertices), vertices, GL_DYNAMIC_STORAGE_BIT);

@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define HT_MAX_KEY_SIZE 256
+#define HT_MAX_KEY_SIZE 255
 #define HT_CAPACITY 509
 
 typedef struct _arena Arena;
