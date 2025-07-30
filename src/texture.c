@@ -6,11 +6,6 @@
 #include <glad/gl.h>
 #include <stb/stb_image.h>
 
-struct _gl_texture {
-	uint32_t id;
-	uint32_t width, height, channels;
-	const char *path;
-};
 
 OpenGLTexture *opengl_texture_load(Arena *arena, uint32_t width, uint32_t height, uint32_t channels, const uint8_t *pixels) {
 	OpenGLTexture *texture = arena_push_type(arena, OpenGLTexture);
