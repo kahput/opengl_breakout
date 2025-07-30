@@ -5,7 +5,14 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+if(MSVC)
+    set(CONFIG $<CONFIG>)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+else()
+    set(CONFIG ${CMAKE_BUILD_TYPE})
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CONFIG})
+endif()
+
 
 add_subdirectory(ext)
 
@@ -15,11 +22,13 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "./src/")
 target_link_libraries( ${PROJECT_NAME} ext)
+
 if(MSVC)
     # /WX
     target_compile_options(${PROJECT_NAME} PRIVATE /W4)
 else()
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    # -Wpedantic
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable)
 endif()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/assets")
@@ -28,12 +37,6 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/assets")
 
     # Get all files in the assets directory
     file(GLOB_RECURSE ASSET_FILES "${ASSETS_DIR}/*.*")
-
-    if(MSVC)
-    set(CONFIG $<CONFIG>)
-    else()
-    set(CONFIG ${CMAKE_BUILD_TYPE})
-    endif()
 
     # Create custom command to copy each asset file
     foreach(ASSET_FILE ${ASSET_FILES})
